@@ -43,7 +43,7 @@
 #include <pcl/surface/reconstruction.h>
 #include <pcl/common/transforms.h>
 #include <pcl/TextureMesh.h>
-
+#include <opencv2/opencv.hpp>
 
 namespace pcl
 {
@@ -73,6 +73,12 @@ namespace pcl
       double height;
       double width;
       std::string texture_file;
+      cv::Mat mask;
+
+      bool set_mask(std::string filename) {
+        mask = cv::imread(filename, cv::IMREAD_GRAYSCALE);
+        return (!mask.empty());
+      }
 
       EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     };

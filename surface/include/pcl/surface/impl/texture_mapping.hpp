@@ -1063,12 +1063,23 @@ pcl::TextureMapping<PointInT>::getPointUVCoordinates(const PointInT &pt, const C
       focal_y = cam.focal_length;
 
     // project point on camera's image plane
-    UV_coordinates.x = static_cast<float> ((focal_x * (pt.x / pt.z) + cx) / sizeX); //horizontal
-    UV_coordinates.y = 1.0f - static_cast<float> ((focal_y * (pt.y / pt.z) + cy) / sizeY); //vertical
+    double x = focal_x * (pt.x / pt.z) + cx;
+    double y = focal_y * (pt.y / pt.z) + cy;
+
+    UV_coordinates.x = static_cast<float> (x / sizeX); //horizontal
+    UV_coordinates.y = 1.0f - static_cast<float> (y / sizeY); //vertical
 
     // point is visible!
-    if (UV_coordinates.x >= 0.0 && UV_coordinates.x <= 1.0 && UV_coordinates.y >= 0.0 && UV_coordinates.y <= 1.0)
+    if (UV_coordinates.x >= 0.0 && UV_coordinates.x <= 1.0 && UV_coordinates.y >= 0.0 && UV_coordinates.y <= 1.0) {
+      if (!cam.mask.empty()) {
+        if (cam.mask.at < unsigned char > (int(y), int(x)) == 0) {
+          UV_coordinates.x = -1.f;
+          UV_coordinates.y = -1.f;
+          return false;
+        }
+      }
       return (true); // point was visible by the camera
+    }
   }
 
   // point is NOT visible by the camera

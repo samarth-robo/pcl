@@ -6,6 +6,8 @@ set(build TRUE)
 PCL_SUBSYS_OPTION(build "${SUBSYS_NAME}" "${SUBSYS_DESC}" ON)
 PCL_SUBSYS_DEPEND(build "${SUBSYS_NAME}" DEPS ${SUBSYS_DEPS} OPT_DEPS qhull)
 
+find_package(OpenCV REQUIRED)
+
 PCL_ADD_DOC("${SUBSYS_NAME}")
 
 if(build)
@@ -158,7 +160,7 @@ if(build)
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include" ${VTK_INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}")
     link_directories(${VTK_LIBRARY_DIRS})
     PCL_ADD_LIBRARY("${LIB_NAME}" "${SUBSYS_NAME}" ${srcs} ${incs} ${impl_incs} ${VTK_SMOOTHING_INCLUDES} ${POISSON_INCLUDES} ${OPENNURBS_INCLUDES} ${ON_NURBS_INCLUDES})
-    target_link_libraries("${LIB_NAME}" pcl_common pcl_search pcl_kdtree pcl_octree ${VTK_LIBRARIES} ${ON_NURBS_LIBRARIES})
+    target_link_libraries("${LIB_NAME}" pcl_common pcl_search pcl_kdtree pcl_octree ${VTK_LIBRARIES} ${ON_NURBS_LIBRARIES} ${OpenCV_LIBS})
     if(QHULL_FOUND)
       target_link_libraries("${LIB_NAME}" ${QHULL_LIBRARIES})
     endif(QHULL_FOUND)
